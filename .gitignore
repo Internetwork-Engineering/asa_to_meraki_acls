@@ -8,3 +8,6 @@ __pycache__/
 # Input and Output files
 *.txt
 !requirements.txt
+*.cfg
+.python-version
+HTA-ASAConfig
