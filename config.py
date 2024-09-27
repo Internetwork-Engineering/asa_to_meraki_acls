@@ -10,21 +10,26 @@ ACL_TYPES = {
     "ACL_OUTSIDE_IN",
   ],
   "outbound_set": [
+    "CLOUDTREK_VPN",
+    "NIRVANA_HEALTH_VPN",
+    "Beacon_ACL",
     "ConeHealth_ACL",
     "Envision_ACL",
-    "TrizettoABQ_ACL",
     "inside_access_in",
-    "TrizettoDEN1_ACL",
-    "Sirius_ACL",
-    "GDIT_ACL",
-    "outside_cryptomap",
-    "NIRVANA_HEALTH_VPN",
-    "NHVPNPKTCPTACL",
-    "CLOUDTREK_VPN",
-    "Beacon_ACL",
-    "GDIT_2_ACL",
     "vti-HTA-Connection-40.76.56.222_access_in",
-    "management_access_in",
   ]
 }
 
+# Hits
+# "CLOUDTREK_VPN",
+# "NIRVANA_HEALTH_VPN",
+# "Beacon_ACL",
+# "ConeHealth_ACL",
+# "Envision_ACL",
+# No Hits
+# "outside_cryptomap",
+# "TrizettoABQ_ACL",
+# "TrizettoDEN1_ACL",
+# "Sirius_ACL",
+# "GDIT_ACL",
+# "GDIT_2_ACL",

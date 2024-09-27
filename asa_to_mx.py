@@ -631,7 +631,10 @@ def parse_line(line):
             else:
                 NAT_FLAG = False
             # add remark
-            acl['comment'] = CURRENT_REMARK
+            if CURRENT_REMARK == "":
+                acl['comment'] = acl['acl_name']
+            else:
+                acl['comment'] = f"{acl['acl_name']}-{CURRENT_REMARK}"
             # Process protocol groups
             if 'protocol_group' in acl and acl['protocol_group']:
                 # NAT rules don't support protocol groups
@@ -835,7 +838,7 @@ def parse_rules(config_file_name):
     return acl_list, nat_acl_list
 
 
-def create_static_rules(static_file_name, network_id):
+def create_static_routes(static_file_name, network_id):
     """
     Create static routes on MX Network if file provided.
     :param static_file_name: static file name that contains static routes
@@ -918,7 +921,10 @@ def create_mx_rules(org_id, network_id, acl_list):
             combos = [[], [], [], []]
             # Handle special case for protocol
             if isinstance(acl['protocol'], list):
-                combos[0] += acl['protocol']
+                if 'ip' in acl['protocol']:
+                    combos[0].append('any')
+                else:
+                    combos[0] += acl['protocol']
             # Normal Defined Protocol
             elif acl['protocol'] == 'ip':
                 combos[0].append('any')
@@ -960,6 +966,7 @@ def create_mx_rules(org_id, network_id, acl_list):
                     'destCidr': result[2],
                     'destPort': result[3]
                 }
+                console.print(f"Created firewall rule: [yellow]{firewall_rule}")
                 firewall_rules.append(firewall_rule)
         # Update the firewall rules in the Meraki MX network
         console.print(
@@ -977,6 +984,7 @@ def create_nat_rules(org_id, network_id, nat_acl_list):
     :param nat_acl_list: list of MX NAT acl objects (containing pieces of MX NAT rules)
     :return:
     """
+    global nat_table
     # If the network was found, add the firewall rules to it
     if org_id is not None and network_id is not None:
         # Convert the Cisco ASA ACL list into Meraki MX nat rules
@@ -1149,10 +1157,10 @@ def main():
     console.print(Panel.fit("Creating VLAN's", title="Step 2"))
     if vlan_file_name != '':
         create_vlans(vlan_file_name, network_id)
-    # Create Static Rules (necessary) for ACL Rules
-    console.print(Panel.fit("Creating Static Rules", title="Step 2.5"))
+    # Create Static Routes (necessary) for ACL Rules
+    console.print(Panel.fit("Creating Static Routes", title="Step 2.5"))
     if static_file_name != '':
-        create_static_rules(static_file_name, network_id)
+        create_static_routes(static_file_name, network_id)
     # Iterate through ACL, parse rules
     console.print(Panel.fit("Parsing ASA ACL Rules", title="Step 3"))
     # Parse normal outbound rules and nat outbound rules
